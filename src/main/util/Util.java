@@ -10,6 +10,11 @@ public class Util {
         System.out.flush();
     }
 
+    public static void pressEnterToContinue() {
+        System.out.println("Press Enter to continue...");
+        scanner.nextLine();
+    }
+
     public static int scanInt() {
         String input = scanner.nextLine();
         try {
@@ -41,8 +46,8 @@ public class Util {
 
     public static String scanPassword() {
         String input = scanner.nextLine();
-        if (input.length() < 8) {
-            System.out.println("[Error] Please enter a password with at least 8 characters.");
+        if (input.length() < 5) {
+            System.out.println("[Error] Please enter a password with at least 5 characters.");
             return scanPassword();
         }
         return input;
