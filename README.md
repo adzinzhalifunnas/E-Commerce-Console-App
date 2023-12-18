@@ -21,6 +21,13 @@ git clone https://github.com/adzinzhalifunnas/E-Commerce-Console-App.git
 
 ## Documentation
 
+##### RoleID
+
+1. Customer = 1
+2. Seller (Store) = 2
+
+
+
 (Coming Soon)
 
 ## Contributors
