@@ -2,6 +2,7 @@ package main.services;
 
 import main.helper.UserHelper;
 import main.model.request.UserRequestDTO;
+import main.util.Password;
 import main.util.Util;
 
 public class UserService {
@@ -35,7 +36,7 @@ public class UserService {
             System.out.print("Enter phone number [10-13 digits]: ");
             phoneNumber = Util.scanPhoneNumber();
         } while (phoneNumber == null);
-        UserRequestDTO userRequestDTO = new UserRequestDTO(email, password, firstName, lastName, phoneNumber, roleID);
+        UserRequestDTO userRequestDTO = new UserRequestDTO(null, email, Password.hash(password), firstName, lastName, phoneNumber, roleID);
         UserHelper.addUser(userRequestDTO);
     }
 

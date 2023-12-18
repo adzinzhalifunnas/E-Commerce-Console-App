@@ -1,6 +1,9 @@
 package main.model.request;
 
+import java.util.UUID;
+
 public class UserRequestDTO {
+    private UUID userID;
     private String email;
     private String password;
     private String firstName;
@@ -8,13 +11,24 @@ public class UserRequestDTO {
     private String phoneNumber;
     private int roleID;
 
-    public UserRequestDTO(String email, String password, String firstName, String lastName, String phoneNumber, int roleID) {
+    public UserRequestDTO(UUID userID, String email, String password, String firstName, String lastName, String phoneNumber, int roleID) {
+        this.userID = userID == null ? UUID.randomUUID() : userID;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.roleID = roleID;
+    }
+
+    public UUID getUserID() {
+        return userID;
+    }
+
+    public void setUserID(UUID userID) {
+        if (userID != null) {
+            this.userID = userID;
+        }
     }
 
     public String getEmail() {

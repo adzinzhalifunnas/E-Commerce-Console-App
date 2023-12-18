@@ -1,6 +1,8 @@
 package main.services;
 
+import main.database.Database;
 import main.helper.UserHelper;
+import main.model.User;
 import main.util.*;
 
 public class MenuService {
@@ -41,9 +43,10 @@ public class MenuService {
         Util.clearScreen();
         System.out.println(Strings.appName + " - Customer Menu");
         System.out.println("1. View Products");
-        System.out.println("2. View Cart");
+        System.out.println("2. View Carts");
         System.out.println("3. View Orders");
-        System.out.println("4. Logout");
+        System.out.println("4. Settings");
+        System.out.println("5. Logout");
         if (isError == 1) {
             System.out.printf("[Error] %d is not a valid choice.\nPlease try again!\n", errorChoice);
             isError = 0;
@@ -55,12 +58,15 @@ public class MenuService {
                 System.out.println("View Products");
                 break;
             case 2:
-                System.out.println("View Cart");
+                System.out.println("View Carts");
                 break;
             case 3:
                 System.out.println("View Orders");
                 break;
             case 4:
+                showUserSettingsMenu(1);
+                break;
+            case 5:
                 UserHelper.logoutUser();
                 System.out.println("Logout");
                 showMainMenu();
@@ -73,12 +79,25 @@ public class MenuService {
         }
     }
 
+    public static void showUserSettingsMenu(int roleID) {
+        Util.clearScreen();
+        System.out.printf(Strings.appName + " - %s Settings\n", (roleID == 1 ? "Customer" : "Seller"));
+        UserHelper.viewUserSettings();
+        Util.pressEnterToContinue();
+        if (roleID == 1) {
+            showCustomerMenu();
+        } else {
+            showSellerMenu();
+        }
+    }
+
     public static void showSellerMenu() {
         Util.clearScreen();
         System.out.println(Strings.appName + " - Seller Menu");
-        System.out.println("1. View Products");
-        System.out.println("2. View Orders");
-        System.out.println("3. Logout");
+        System.out.println("1. Manage Products");
+        System.out.println("2. Manage Orders");
+        System.out.println("3. Settings");
+        System.out.println("4. Logout");
         if (isError == 1) {
             System.out.printf("[Error] %d is not a valid choice.\nPlease try again!\n", errorChoice);
             isError = 0;
@@ -87,12 +106,15 @@ public class MenuService {
         int choice = Util.scanInt();
         switch (choice) {
             case 1:
-                System.out.println("View Products");
+                System.out.println("Manage Products");
                 break;
             case 2:
-                System.out.println("View Orders");
+                System.out.println("Manage Orders");
                 break;
             case 3:
+                showUserSettingsMenu(2);
+                break;
+            case 4:
                 UserHelper.logoutUser();
                 System.out.println("Logout");
                 showMainMenu();
@@ -195,6 +217,14 @@ public class MenuService {
             Boolean isLogin = UserService.loginUser(roleID);
             if (isLogin) {
                 System.out.println("You have successfully logged in as " + object + "!");
+                User user = Database.loggedInUser;
+                Boolean isAddressExist = UserHelper.checkUserAddress(user.getUserID());
+                if (!isAddressExist) {
+                    System.out.println("You have not set your address yet.");
+                    System.out.println("Please set your address first.");
+                    Util.pressEnterToContinue();
+                    AddressService.addAddress(user.getUserID());
+                }
                 Util.pressEnterToContinue();
                 if (roleID == 1) {
                     showCustomerMenu();
@@ -204,7 +234,7 @@ public class MenuService {
             } else {
                 System.out.println("[Error] Invalid email or password.");
                 Util.pressEnterToContinue();
-                showLoginMenu();
+                loginUser(roleID);
             }
         } else if (choice.equalsIgnoreCase("n")) {
             showLoginMenu();
