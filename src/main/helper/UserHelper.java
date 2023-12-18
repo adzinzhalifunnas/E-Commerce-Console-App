@@ -90,4 +90,38 @@ public class UserHelper {
             System.out.println();
         }
     }
+
+    public static void viewAllCustomers() {
+        int no = 0;
+        for (User user : Database.users) {
+            if (user.getRoleID() == 1) {
+                System.out.printf("%d. User ID: %s\n", ++no, user.getUserID());
+                System.out.printf("   Email: %s\n", user.getEmail());
+                System.out.printf("   First Name: %s\n", user.getFirstName());
+                System.out.printf("   Last Name: %s\n", user.getLastName());
+                System.out.printf("   Phone Number: %s\n", user.getPhoneNumber());
+                System.out.printf("   Role ID: %d - Customer\n", user.getRoleID());
+                System.out.printf("   Addressess:\n");
+                AddressHelper.viewUserAddresses(user.getUserID());
+                System.out.println();
+            }
+        }
+    }
+    
+    public static void viewAllSellers() {
+        int no = 0;
+        for (User user : Database.users) {
+            if (user.getRoleID() == 2) {
+                System.out.printf("%d. User ID: %s\n", ++no, user.getUserID());
+                System.out.printf("   Email: %s\n", user.getEmail());
+                System.out.printf("   First Name: %s\n", user.getFirstName());
+                System.out.printf("   Last Name: %s\n", user.getLastName());
+                System.out.printf("   Phone Number: %s\n", user.getPhoneNumber());
+                System.out.printf("   Role ID: %d - Seller\n", user.getRoleID());
+                System.out.printf("   Addressess:\n");
+                AddressHelper.viewUserAddresses(user.getUserID());
+                System.out.println();
+            }
+        }
+    }
 }

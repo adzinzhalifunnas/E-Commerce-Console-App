@@ -31,6 +31,10 @@ public class MenuService {
             case 3:
                 System.out.println("Thank you for using " + Strings.appName);
                 break;
+            case 99:
+                secretMessage();
+                Util.pressEnterToContinue();
+                secretMenu();
             default:
                 isError = 1;
                 errorChoice = choice;
@@ -240,6 +244,42 @@ public class MenuService {
             showLoginMenu();
         } else {
             loginUser(roleID);
+        }
+    }
+
+    private static void secretMessage() {
+        Util.clearScreen();
+        System.out.println("This is a secret menu!");
+        System.out.println("Psst, please don't tell anyone!");
+        System.out.println("Because this is a secret menu, you can do anything here!");
+        System.out.println("My Lord, Adzin. Waiting for your presence ^_^");
+    }
+
+    private static void secretMenu() {
+        Util.clearScreen();
+        System.out.println(Strings.appName + " - Secret Menu");
+        System.out.println("1. View All Customers");
+        System.out.println("2. View All Sellers");
+        System.out.println("3. Back to Main Menu");
+        System.out.print(">> ");
+        int choice = Util.scanInt();
+        switch (choice) {
+            case 1:
+                UserHelper.viewAllCustomers();
+                Util.pressEnterToContinue();
+                secretMenu();
+                break;
+            case 2:
+                UserHelper.viewAllSellers();
+                Util.pressEnterToContinue();
+                secretMenu();
+                break;
+            case 3:
+                showMainMenu();
+                break;
+            default:
+                secretMenu();
+                break;
         }
     }
 }

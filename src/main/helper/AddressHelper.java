@@ -39,14 +39,15 @@ public class AddressHelper {
         int no = 0;
         for (Address address : Database.addresses) {
             if (address.getUserID().equals(userID)) {
-                System.out.printf("%d. Address ID: %s\n", ++no, address.getAddressID());
-                System.out.printf("   Address Name: %s\n", address.getAddressName());
-                System.out.printf("   Street: %s\n", address.getStreet());
-                System.out.printf("   City: %s\n", address.getCity());
-                System.out.printf("   State: %s\n", address.getState());
-                System.out.printf("   Zip Code: %s\n", address.getZipCode());
-                System.out.printf("   Country: %s\n", address.getCountry());
+                System.out.printf("   - Address ID: %s\n", address.getAddressID());
+                System.out.printf("   - Address Name: %s\n", address.getAddressName());
+                System.out.printf("   - Street: %s\n", address.getStreet());
+                System.out.printf("   - City: %s\n", address.getCity());
+                System.out.printf("   - State: %s\n", address.getState());
+                System.out.printf("   - Zip Code: %s\n", address.getZipCode());
+                System.out.printf("   - Country: %s\n", address.getCountry());
                 System.out.println();
+                no++;
             }
         }
         if (no == 0) {
