@@ -10,13 +10,13 @@ public class AddressService {
     public static void addAddress(UUID userID) {
         String addressName, street, city, state, zipCode, country;
         do {
-            System.out.print("Enter Address Name [3..20]: ");
+            System.out.print("Enter Address Name [3..50]: ");
             addressName = Util.scanString();
-        } while (addressName.length() < 3 || addressName.length() > 20);
+        } while (addressName.length() < 3 || addressName.length() > 50);
         do {
-            System.out.print("Enter Street [3..20]: ");
+            System.out.print("Enter Street [3..50]: ");
             street = Util.scanString();
-        } while (street.length() < 3 || street.length() > 20);
+        } while (street.length() < 3 || street.length() > 50);
         do {
             System.out.print("Enter City [3..20]: ");
             city = Util.scanString();

@@ -265,12 +265,12 @@ public class MenuService {
         int choice = Util.scanInt();
         switch (choice) {
             case 1:
-                UserHelper.viewAllCustomers();
+                UserHelper.viewAllUsers(1);
                 Util.pressEnterToContinue();
                 secretMenu();
                 break;
             case 2:
-                UserHelper.viewAllSellers();
+                UserHelper.viewAllUsers(2);
                 Util.pressEnterToContinue();
                 secretMenu();
                 break;

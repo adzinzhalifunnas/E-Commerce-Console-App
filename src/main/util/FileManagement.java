@@ -20,7 +20,13 @@ public class FileManagement {
     public static <E> void readFromFile(String filePath, String type) {
         String pwd = System.getProperty("user.dir");
         String fullPath = String.format("%s/%s", pwd, filePath);
-        Boolean isFileExist = new File(fullPath).exists();
+        Boolean isFileExist = false;
+        try {
+            isFileExist = new File(fullPath).exists();
+        } catch (Exception e) {
+            fullPath = String.format("%s/src/%s", pwd, filePath);
+            isFileExist = new File(fullPath).exists();
+        }
         if (isFileExist) {
             try {
                 File file = new File(fullPath);
@@ -36,7 +42,8 @@ public class FileManagement {
                             dataArray[3],
                             dataArray[4],
                             dataArray[5],
-                            Integer.parseInt(dataArray[6])
+                            Double.parseDouble(dataArray[6]),
+                            Integer.parseInt(dataArray[7])
                         );
                         UserHelper.addUser(userRequestDTO);
                     } else if (type.equals("addresses")) {
@@ -72,13 +79,10 @@ public class FileManagement {
         if (isFileExist) {
             try {
                 Boolean isDataExist = false;
-                String formatData;
                 File file = new File(fullPath);
                 Scanner scanner = new Scanner(file);
                 if (type.equals("users")) {
                     User newData = (User) data;
-                    formatData = String.format("%s,%s,%s,%s,%s,%s,%d", newData.getUserID(), newData.getEmail(), newData.getPassword(), newData.getFirstName(), newData.getLastName(), newData.getPhoneNumber(), newData.getRoleID());
-                    System.out.println(formatData);
                     while (scanner.hasNextLine()) {
                         String dataFromFile = scanner.nextLine();
                         String[] dataFromFileArray = dataFromFile.split(",");
@@ -89,7 +93,6 @@ public class FileManagement {
                     }
                 } else if (type.equals("addresses")) {
                     Address newData = (Address) data;
-                    formatData = String.format("%s,%s,%s,%s,%s,%s,%s,%s", newData.getAddressID(), newData.getUserID(), newData.getAddressName(), newData.getStreet(), newData.getCity(), newData.getState(), newData.getZipCode(), newData.getCountry());
                     while (scanner.hasNextLine()) {
                         String dataFromFile = scanner.nextLine();
                         String[] dataFromFileArray = dataFromFile.split(",");
@@ -98,15 +101,19 @@ public class FileManagement {
                             break;
                         }
                     }
-                } else {
-                    formatData = "";
                 }
                 scanner.close();
                 if (!isDataExist) {
                     try {
                         FileWriter fileWriter = new FileWriter(file, true);
                         PrintWriter printWriter = new PrintWriter(fileWriter);
-                        printWriter.println(formatData);
+                        if (type.equals("users")) {
+                            User newData = (User) data;
+                            printWriter.printf("%s,%s,%s,%s,%s,%s,%f,%d\n", newData.getUserID(), newData.getEmail(), newData.getPassword(), newData.getFirstName(), newData.getLastName(), newData.getPhoneNumber(), newData.getBalance(), newData.getRoleID());
+                        } else if (type.equals("addresses")) {
+                            Address newData = (Address) data;
+                            printWriter.printf("%s,%s,%s,%s,%s,%s,%s,%s\n", newData.getAddressID(), newData.getUserID(), newData.getAddressName(), newData.getStreet(), newData.getCity(), newData.getState(), newData.getZipCode(), newData.getCountry());
+                        }
                         printWriter.close();
                     } catch (IOException e) {
                         System.out.println("An error occurred.");

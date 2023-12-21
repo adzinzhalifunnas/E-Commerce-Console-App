@@ -36,7 +36,7 @@ public class UserService {
             System.out.print("Enter phone number [10-13 digits]: ");
             phoneNumber = Util.scanPhoneNumber();
         } while (phoneNumber == null);
-        UserRequestDTO userRequestDTO = new UserRequestDTO(null, email, Password.hash(password), firstName, lastName, phoneNumber, roleID);
+        UserRequestDTO userRequestDTO = new UserRequestDTO(null, email, Password.hash(password), firstName, lastName, phoneNumber, 0.00, roleID);
         UserHelper.addUser(userRequestDTO);
     }
 

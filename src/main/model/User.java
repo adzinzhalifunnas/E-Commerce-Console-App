@@ -9,15 +9,20 @@ public class User {
     private String firstName;
     private String lastName;
     private String phoneNumber;
+    private Double balance;
+    // its not safe and not recommended to store balance with this data type (like int, double, etc).
+    // i recommend you to use transaction table to store the balance history (credit, debit, etc) and calculate the balance from there.
+    // but for this project, i think its okay to use this data type because its just a simple project. :)
     private int roleID;
 
-    public User(UUID userID, String email, String password, String firstName, String lastName, String phoneNumber, int roleID) {
+    public User(UUID userID, String email, String password, String firstName, String lastName, String phoneNumber, Double balance, int roleID) {
         this.userID = userID;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
+        this.balance = balance;
         this.roleID = roleID;
     }
 
@@ -67,6 +72,16 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        if (balance >= 0) {
+            this.balance = balance;
+        }
     }
 
     public int getRoleID() {

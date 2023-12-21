@@ -9,15 +9,17 @@ public class UserRequestDTO {
     private String firstName;
     private String lastName;
     private String phoneNumber;
+    private Double balance;
     private int roleID;
 
-    public UserRequestDTO(UUID userID, String email, String password, String firstName, String lastName, String phoneNumber, int roleID) {
+    public UserRequestDTO(UUID userID, String email, String password, String firstName, String lastName, String phoneNumber, Double balance, int roleID) {
         this.userID = userID == null ? UUID.randomUUID() : userID;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
+        this.balance = balance;
         this.roleID = roleID;
     }
 
@@ -69,6 +71,16 @@ public class UserRequestDTO {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        if (balance >= 0) {
+            this.balance = balance;
+        }
     }
 
     public int getRoleID() {

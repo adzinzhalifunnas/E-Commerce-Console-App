@@ -30,6 +30,7 @@ public class UserHelper {
                 userRequestDTO.getFirstName(),
                 userRequestDTO.getLastName(),
                 userRequestDTO.getPhoneNumber(),
+                userRequestDTO.getBalance(),
                 userRequestDTO.getRoleID()
             );
             Database.users.add(user);
@@ -71,53 +72,23 @@ public class UserHelper {
         System.out.printf("- First Name: %s\n", Database.loggedInUser.getFirstName());
         System.out.printf("- Last Name: %s\n", Database.loggedInUser.getLastName());
         System.out.printf("- Phone Number: %s\n", Database.loggedInUser.getPhoneNumber());
+        System.out.printf("- Balance: IDR %.2f\n", Database.loggedInUser.getBalance());
         System.out.printf("- Role ID: %d - %s\n", Database.loggedInUser.getRoleID(), (Database.loggedInUser.getRoleID() == 1 ? "Customer" : "Seller"));
         System.out.println("- Addressess:");
         AddressHelper.viewUserAddresses(Database.loggedInUser.getUserID());
     }
 
-    public static void viewAllUsers() {
+    public static void viewAllUsers(int roleID) {
         int no = 0;
         for (User user : Database.users) {
-            System.out.printf("%d. User ID: %s\n", ++no, user.getUserID());
-            System.out.printf("   Email: %s\n", user.getEmail());
-            System.out.printf("   First Name: %s\n", user.getFirstName());
-            System.out.printf("   Last Name: %s\n", user.getLastName());
-            System.out.printf("   Phone Number: %s\n", user.getPhoneNumber());
-            System.out.printf("   Role ID: %d - %s\n", user.getRoleID(), (user.getRoleID() == 1 ? "Customer" : "Seller"));
-            System.out.printf("   Addressess:\n");
-            AddressHelper.viewUserAddresses(user.getUserID());
-            System.out.println();
-        }
-    }
-
-    public static void viewAllCustomers() {
-        int no = 0;
-        for (User user : Database.users) {
-            if (user.getRoleID() == 1) {
+            if (user.getRoleID() == roleID) {
                 System.out.printf("%d. User ID: %s\n", ++no, user.getUserID());
                 System.out.printf("   Email: %s\n", user.getEmail());
                 System.out.printf("   First Name: %s\n", user.getFirstName());
                 System.out.printf("   Last Name: %s\n", user.getLastName());
                 System.out.printf("   Phone Number: %s\n", user.getPhoneNumber());
-                System.out.printf("   Role ID: %d - Customer\n", user.getRoleID());
-                System.out.printf("   Addressess:\n");
-                AddressHelper.viewUserAddresses(user.getUserID());
-                System.out.println();
-            }
-        }
-    }
-    
-    public static void viewAllSellers() {
-        int no = 0;
-        for (User user : Database.users) {
-            if (user.getRoleID() == 2) {
-                System.out.printf("%d. User ID: %s\n", ++no, user.getUserID());
-                System.out.printf("   Email: %s\n", user.getEmail());
-                System.out.printf("   First Name: %s\n", user.getFirstName());
-                System.out.printf("   Last Name: %s\n", user.getLastName());
-                System.out.printf("   Phone Number: %s\n", user.getPhoneNumber());
-                System.out.printf("   Role ID: %d - Seller\n", user.getRoleID());
+                System.out.printf("   Balance: IDR %.2f\n", user.getBalance());
+                System.out.printf("   Role ID: %d - %s\n", user.getRoleID(), (user.getRoleID() == 1 ? "Customer" : "Seller"));
                 System.out.printf("   Addressess:\n");
                 AddressHelper.viewUserAddresses(user.getUserID());
                 System.out.println();
