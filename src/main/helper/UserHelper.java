@@ -72,7 +72,7 @@ public class UserHelper {
         System.out.printf("- First Name: %s\n", Database.loggedInUser.getFirstName());
         System.out.printf("- Last Name: %s\n", Database.loggedInUser.getLastName());
         System.out.printf("- Phone Number: %s\n", Database.loggedInUser.getPhoneNumber());
-        System.out.printf("- Balance: IDR %.2f\n", Database.loggedInUser.getBalance());
+        System.out.printf("- Balance: %s\n", Util.formatIDR(Database.loggedInUser.getBalance()));
         System.out.printf("- Role ID: %d - %s\n", Database.loggedInUser.getRoleID(), (Database.loggedInUser.getRoleID() == 1 ? "Customer" : "Seller"));
         System.out.println("- Addressess:");
         AddressHelper.viewUserAddresses(Database.loggedInUser.getUserID());
@@ -87,7 +87,12 @@ public class UserHelper {
                 System.out.printf("   First Name: %s\n", user.getFirstName());
                 System.out.printf("   Last Name: %s\n", user.getLastName());
                 System.out.printf("   Phone Number: %s\n", user.getPhoneNumber());
-                System.out.printf("   Balance: IDR %.2f\n", user.getBalance());
+                Double balance = user.getBalance();
+                if (balance == 0) {
+                    System.out.printf("   Balance: IDR 0\n");
+                } else {
+                    System.out.printf("   Balance: %s\n", Util.formatIDR(balance));
+                }
                 System.out.printf("   Role ID: %d - %s\n", user.getRoleID(), (user.getRoleID() == 1 ? "Customer" : "Seller"));
                 System.out.printf("   Addressess:\n");
                 AddressHelper.viewUserAddresses(user.getUserID());

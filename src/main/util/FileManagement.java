@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -20,7 +21,6 @@ import main.model.request.AddressRequestDTO;
 import main.model.request.ProductRequestDTO;
 import main.model.request.TransactionRequestDTO;
 import main.model.request.UserRequestDTO;
-
 
 public class FileManagement {
     public static <E> void readFromFile(String filePath, String type) {
@@ -183,6 +183,30 @@ public class FileManagement {
                     }
                 }
             } catch (Exception e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
+        } else {
+            System.out.printf("File %s not found!\n", filePath);
+        }
+    }
+
+    public static void clearFile(String filePath) {
+        String pwd = System.getProperty("user.dir");
+        String fullPath = String.format("%s/%s", pwd, filePath);
+        Boolean isFileExist = false;
+        isFileExist = new File(fullPath).exists();
+        if (!isFileExist) {
+            fullPath = String.format("%s/src/%s", pwd, filePath);
+            isFileExist = new File(fullPath).exists();
+        }
+        if (isFileExist) {
+            try {
+                FileWriter fileWriter = new FileWriter(fullPath);
+                PrintWriter printWriter = new PrintWriter(fileWriter);
+                printWriter.print("");
+                printWriter.close();
+            } catch (IOException e) {
                 System.out.println("An error occurred.");
                 e.printStackTrace();
             }

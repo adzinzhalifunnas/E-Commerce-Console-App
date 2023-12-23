@@ -87,6 +87,9 @@ public class Util {
     }
 
     public static String formatIDR(Double amount) {
+        if (amount == 0) {
+            return "IDR 0";
+        }
         return String.format("IDR %,.2f", amount);
     }
 

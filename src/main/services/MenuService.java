@@ -4,8 +4,14 @@ import java.util.UUID;
 
 import main.database.Database;
 import main.helper.UserHelper;
+import main.model.Address;
+import main.model.Product;
+import main.model.Transaction;
 import main.model.User;
-import main.util.*;
+import main.util.BackupData;
+import main.util.FileManagement;
+import main.util.Strings;
+import main.util.Util;
 
 public class MenuService {
     private static int isError = 0;
@@ -31,6 +37,7 @@ public class MenuService {
                 showLoginMenu();
                 break;
             case 3:
+                BackupData.backupData();
                 System.out.printf("Thank you for using %s. See you again!\n", Strings.appName);
                 break;
             case 99:
@@ -189,7 +196,7 @@ public class MenuService {
                 sellerManageProductsMenu();
                 break;
             case 2:
-                System.out.println("Manage Orders");
+                sellerManageOrdersMenu();
                 break;
             case 3:
                 showUserSettingsMenu(2);
@@ -213,9 +220,7 @@ public class MenuService {
         ProductService.viewUserProducts();
         System.out.println("\nChoose one of the following options:");
         System.out.println("1. Add Product");
-        System.out.println("2. Edit Product");
-        System.out.println("3. Delete Product");
-        System.out.println("4. Back to Seller Menu");
+        System.out.println("2. Back to Seller Menu");
         if (isError == 1) {
             System.out.printf("[Error] %d is not a valid choice.\nPlease try again!\n", errorChoice);
             isError = 0;
@@ -230,18 +235,32 @@ public class MenuService {
                 sellerManageProductsMenu();
                 break;
             case 2:
-                System.out.println("Edit Product");
-                break;
-            case 3:
-                System.out.println("Delete Product");
-                break;
-            case 4:
                 showSellerMenu();
                 break;
             default:
                 isError = 1;
                 errorChoice = choice;
                 sellerManageProductsMenu();
+                break;
+        }
+    }
+
+    public static void sellerManageOrdersMenu() {
+        Util.clearScreen();
+        System.out.println(Strings.appName + " - Manage Orders");
+        TransactionService.viewSellerTransactions();
+        System.out.println("\nChoose one of the following options:");
+        System.out.println("1. Back to Seller Menu");
+        System.out.print(">> ");
+        int choice = Util.scanInt();
+        switch (choice) {
+            case 1:
+                showSellerMenu();
+                break;
+            default:
+                isError = 1;
+                errorChoice = choice;
+                sellerManageOrdersMenu();
                 break;
         }
     }

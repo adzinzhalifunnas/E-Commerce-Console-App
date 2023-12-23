@@ -51,7 +51,6 @@ public class TransactionHelper {
                 System.out.printf("   - Transaction ID: %s\n", transaction.getTransactionID());
                 System.out.printf("   - Product Name: %s\n", ProductHelper.getProductName(transaction.getProductID()));
                 System.out.printf("   - Quantity: %d\n", transaction.getQuantity());
-                System.out.printf("   - Stock Now: %d\n", ProductHelper.getProductStock(transaction.getProductID()));
                 System.out.printf("   - Total Price: %s\n", Util.formatIDR(transaction.getTotalPrice()));
                 System.out.printf("   - Transaction Date: %s\n", Util.convertDateTime(transaction.getTransactionDate()));
                 System.out.printf("   - Transaction Status: %s\n", transaction.getTransactionStatus());

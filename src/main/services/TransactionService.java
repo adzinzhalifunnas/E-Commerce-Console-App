@@ -10,7 +10,6 @@ import main.model.Address;
 import main.model.Product;
 import main.model.User;
 import main.model.request.TransactionRequestDTO;
-import main.util.FileManagement;
 import main.util.Util;
 
 public class TransactionService {
@@ -45,9 +44,6 @@ public class TransactionService {
                             buyer.setBalance(newBuyerBalance);
                             product.setProductStock(newProductStock);
                             product.setProductSold(newProductSold);
-                            FileManagement.writeToFile("users.csv", "users", seller);
-                            FileManagement.writeToFile("users.csv", "users", buyer);
-                            FileManagement.writeToFile("products.csv", "products", product);
                             String transactionDate = Util.getCurrentDateTime();
                             TransactionRequestDTO transactionRequestDTO = new TransactionRequestDTO(null, buyerID, sellerID, productID, chosenAddress.getAddressID(), quantity, totalPrice, transactionDate, "PAID");
                             TransactionHelper.addTransaction(transactionRequestDTO);
