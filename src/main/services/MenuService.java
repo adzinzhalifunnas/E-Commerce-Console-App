@@ -4,12 +4,8 @@ import java.util.UUID;
 
 import main.database.Database;
 import main.helper.UserHelper;
-import main.model.Address;
-import main.model.Product;
-import main.model.Transaction;
 import main.model.User;
 import main.util.BackupData;
-import main.util.FileManagement;
 import main.util.Strings;
 import main.util.Util;
 

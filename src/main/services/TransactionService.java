@@ -9,7 +9,6 @@ import main.helper.UserHelper;
 import main.model.Address;
 import main.model.Product;
 import main.model.User;
-import main.model.request.TransactionRequestDTO;
 import main.services.thread.ProcessTransactionThread;
 import main.util.Util;
 
