@@ -1,5 +1,7 @@
 package main.services;
 
+import java.util.UUID;
+
 import main.database.Database;
 import main.helper.UserHelper;
 import main.model.User;
@@ -29,7 +31,7 @@ public class MenuService {
                 showLoginMenu();
                 break;
             case 3:
-                System.out.println("Thank you for using " + Strings.appName);
+                System.out.printf("Thank you for using %s. See you again!\n", Strings.appName);
                 break;
             case 99:
                 secretMessage();
@@ -47,10 +49,9 @@ public class MenuService {
         Util.clearScreen();
         System.out.println(Strings.appName + " - Customer Menu");
         System.out.println("1. View Products");
-        System.out.println("2. View Carts");
-        System.out.println("3. View Orders");
-        System.out.println("4. Settings");
-        System.out.println("5. Logout");
+        System.out.println("2. View Orders");
+        System.out.println("3. Settings");
+        System.out.println("4. Logout");
         if (isError == 1) {
             System.out.printf("[Error] %d is not a valid choice.\nPlease try again!\n", errorChoice);
             isError = 0;
@@ -59,18 +60,15 @@ public class MenuService {
         int choice = Util.scanInt();
         switch (choice) {
             case 1:
-                System.out.println("View Products");
+                customerViewProductsMenu();
                 break;
             case 2:
-                System.out.println("View Carts");
+                customerViewOrdersMenu();
                 break;
             case 3:
-                System.out.println("View Orders");
-                break;
-            case 4:
                 showUserSettingsMenu(1);
                 break;
-            case 5:
+            case 4:
                 UserHelper.logoutUser();
                 System.out.println("Logout");
                 showMainMenu();
@@ -83,15 +81,93 @@ public class MenuService {
         }
     }
 
-    public static void showUserSettingsMenu(int roleID) {
+    public static void customerViewProductsMenu() {
         Util.clearScreen();
-        System.out.printf(Strings.appName + " - %s Settings\n", (roleID == 1 ? "Customer" : "Seller"));
-        UserHelper.viewUserSettings();
-        Util.pressEnterToContinue();
-        if (roleID == 1) {
+        System.out.println(Strings.appName + " - View Products");
+        ProductService.viewAllProducts();
+        System.out.println("\nChoose number of product you want to buy or choose 0 to go back to Customer Menu:");
+        System.out.print(">> ");
+        int choice = Util.scanInt();
+        if (choice == 0) {
             showCustomerMenu();
         } else {
-            showSellerMenu();
+            int totalProduct = Database.products.size();
+            if (choice > totalProduct) {
+                System.out.printf("[Error] %d is not a valid choice.\nPlease try again!\n", choice);
+                Util.pressEnterToContinue();
+                customerViewProductsMenu();
+            } else {
+                Boolean isProductOutOfStock = ProductService.isProductOutOfStock(Database.products.get(choice - 1).getProductID());
+                if (isProductOutOfStock) {
+                    System.out.println("[Error] Product is out of stock.");
+                    Util.pressEnterToContinue();
+                    customerViewProductsMenu();
+                } else {
+                    UUID chosenProductID = Database.products.get(choice - 1).getProductID();
+                    TransactionService.addTransaction(chosenProductID);
+                    System.out.println("[Info] Transaction has been completed.");
+                    Util.pressEnterToContinue();
+                    customerViewProductsMenu();
+                }
+            }
+        }
+    }
+
+    public static void customerViewOrdersMenu() {
+        Util.clearScreen();
+        System.out.println(Strings.appName + " - View Orders");
+        TransactionService.viewBuyerTransactions();
+        System.out.println("\nChoose one of the following options:");
+        System.out.println("1. Back to Customer Menu");
+        System.out.print(">> ");
+        int choice = Util.scanInt();
+        switch (choice) {
+            case 1:
+                showCustomerMenu();
+                break;
+            default:
+                isError = 1;
+                errorChoice = choice;
+                customerViewOrdersMenu();
+                break;
+        }
+    }
+
+    public static void showUserSettingsMenu(int roleID) {
+        Util.clearScreen();
+        String object = roleID == 1 ? "Customer" : "Seller";
+        System.out.printf(Strings.appName + " - %s Settings\n", object);
+        UserHelper.viewUserSettings();
+        System.out.println("\nChoose one of the following options:");
+        System.out.println("1. Add Address");
+        System.out.printf("2. Back to %s Menu\n", object);
+        System.out.print(">> ");
+        int choice = Util.scanInt();
+        switch (choice) {
+            case 1:
+                if (roleID == 1) {
+                    AddressService.addAddress(Database.loggedInUser.getUserID());
+                    System.out.println("Successfully added address!");
+                    Util.pressEnterToContinue();
+                    showUserSettingsMenu(roleID);
+                } else {
+                    System.out.println("You are not allowed to add address!");
+                    System.out.println("This feature is only available for customer.");
+                    Util.pressEnterToContinue();
+                    showUserSettingsMenu(roleID);
+                }
+            case 2:
+                if (roleID == 1) {
+                    showCustomerMenu();
+                } else {
+                    showSellerMenu();
+                }
+                break;
+            default:
+                isError = 1;
+                errorChoice = choice;
+                showUserSettingsMenu(roleID);
+                break;
         }
     }
 
@@ -110,7 +186,7 @@ public class MenuService {
         int choice = Util.scanInt();
         switch (choice) {
             case 1:
-                System.out.println("Manage Products");
+                sellerManageProductsMenu();
                 break;
             case 2:
                 System.out.println("Manage Orders");
@@ -127,6 +203,45 @@ public class MenuService {
                 isError = 1;
                 errorChoice = choice;
                 showSellerMenu();
+                break;
+        }
+    }
+
+    public static void sellerManageProductsMenu() {
+        Util.clearScreen();
+        System.out.println(Strings.appName + " - Manage Products");
+        ProductService.viewUserProducts();
+        System.out.println("\nChoose one of the following options:");
+        System.out.println("1. Add Product");
+        System.out.println("2. Edit Product");
+        System.out.println("3. Delete Product");
+        System.out.println("4. Back to Seller Menu");
+        if (isError == 1) {
+            System.out.printf("[Error] %d is not a valid choice.\nPlease try again!\n", errorChoice);
+            isError = 0;
+        }
+        System.out.print(">> ");
+        int choice = Util.scanInt();
+        switch (choice) {
+            case 1:
+                ProductService.addProduct();
+                System.out.println("Successfully added product!");
+                Util.pressEnterToContinue();
+                sellerManageProductsMenu();
+                break;
+            case 2:
+                System.out.println("Edit Product");
+                break;
+            case 3:
+                System.out.println("Delete Product");
+                break;
+            case 4:
+                showSellerMenu();
+                break;
+            default:
+                isError = 1;
+                errorChoice = choice;
+                sellerManageProductsMenu();
                 break;
         }
     }

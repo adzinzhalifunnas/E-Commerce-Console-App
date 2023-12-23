@@ -9,10 +9,16 @@ import java.util.Scanner;
 import java.util.UUID;
 
 import main.helper.AddressHelper;
+import main.helper.ProductHelper;
+import main.helper.TransactionHelper;
 import main.helper.UserHelper;
 import main.model.Address;
+import main.model.Product;
+import main.model.Transaction;
 import main.model.User;
 import main.model.request.AddressRequestDTO;
+import main.model.request.ProductRequestDTO;
+import main.model.request.TransactionRequestDTO;
 import main.model.request.UserRequestDTO;
 
 
@@ -21,9 +27,8 @@ public class FileManagement {
         String pwd = System.getProperty("user.dir");
         String fullPath = String.format("%s/%s", pwd, filePath);
         Boolean isFileExist = false;
-        try {
-            isFileExist = new File(fullPath).exists();
-        } catch (Exception e) {
+        isFileExist = new File(fullPath).exists();
+        if (!isFileExist) {
             fullPath = String.format("%s/src/%s", pwd, filePath);
             isFileExist = new File(fullPath).exists();
         }
@@ -58,6 +63,30 @@ public class FileManagement {
                             dataArray[7]
                         );
                         AddressHelper.addAddress(addressRequestDTO);
+                    } else if (type.equals("products")) {
+                        ProductRequestDTO productRequestDTO = new ProductRequestDTO(
+                            UUID.fromString(dataArray[0]),
+                            UUID.fromString(dataArray[1]),
+                            dataArray[2],
+                            dataArray[3],
+                            Double.parseDouble(dataArray[4]),
+                            Integer.parseInt(dataArray[5]),
+                            Integer.parseInt(dataArray[6])
+                        );
+                        ProductHelper.addProduct(productRequestDTO);
+                    } else if (type.equals("transactions")) {
+                        TransactionRequestDTO transactionRequestDTO = new TransactionRequestDTO(
+                            UUID.fromString(dataArray[0]),
+                            UUID.fromString(dataArray[1]),
+                            UUID.fromString(dataArray[2]),
+                            UUID.fromString(dataArray[3]),
+                            UUID.fromString(dataArray[4]),
+                            Integer.parseInt(dataArray[5]),
+                            Double.parseDouble(dataArray[6]),
+                            dataArray[7],
+                            dataArray[8]
+                        );
+                        TransactionHelper.addTransaction(transactionRequestDTO);
                     } else {
                         System.out.println("Type not found!");
                     }
@@ -68,14 +97,19 @@ public class FileManagement {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("File not found!");
+            System.out.printf("File %s not found!\n", filePath);
         }
     }
 
     public static <E> void writeToFile(String filePath, String type, E data) {
         String pwd = System.getProperty("user.dir");
         String fullPath = String.format("%s/%s", pwd, filePath);
-        Boolean isFileExist = new File(fullPath).exists();
+        Boolean isFileExist = false;
+        isFileExist = new File(fullPath).exists();
+        if (!isFileExist) {
+            fullPath = String.format("%s/src/%s", pwd, filePath);
+            isFileExist = new File(fullPath).exists();
+        }
         if (isFileExist) {
             try {
                 Boolean isDataExist = false;
@@ -96,11 +130,33 @@ public class FileManagement {
                     while (scanner.hasNextLine()) {
                         String dataFromFile = scanner.nextLine();
                         String[] dataFromFileArray = dataFromFile.split(",");
-                        if (dataFromFileArray[2].equals(newData.getAddressName())) {
+                        if (dataFromFileArray[1].equals(newData.getUserID().toString()) && dataFromFileArray[2].equals(newData.getAddressName())) {
                             isDataExist = true;
                             break;
                         }
                     }
+                } else if (type.equals("products")) {
+                    Product newData = (Product) data;
+                    while (scanner.hasNextLine()) {
+                        String dataFromFile = scanner.nextLine();
+                        String[] dataFromFileArray = dataFromFile.split(",");
+                        if (dataFromFileArray[1].equals(newData.getProductSellerID().toString()) && dataFromFileArray[2].equals(newData.getProductName())) {
+                            isDataExist = true;
+                            break;
+                        }
+                    }
+                } else if (type.equals("transactions")) {
+                    Transaction newData = (Transaction) data;
+                    while (scanner.hasNextLine()) {
+                        String dataFromFile = scanner.nextLine();
+                        String[] dataFromFileArray = dataFromFile.split(",");
+                        if (dataFromFileArray[0].equals(newData.getTransactionID().toString())) {
+                            isDataExist = true;
+                            break;
+                        }
+                    }
+                } else {
+                    System.out.println("Type not found!");
                 }
                 scanner.close();
                 if (!isDataExist) {
@@ -113,6 +169,12 @@ public class FileManagement {
                         } else if (type.equals("addresses")) {
                             Address newData = (Address) data;
                             printWriter.printf("%s,%s,%s,%s,%s,%s,%s,%s\n", newData.getAddressID(), newData.getUserID(), newData.getAddressName(), newData.getStreet(), newData.getCity(), newData.getState(), newData.getZipCode(), newData.getCountry());
+                        } else if (type.equals("products")) {
+                            Product newData = (Product) data;
+                            printWriter.printf("%s,%s,%s,%s,%f,%d,%d\n", newData.getProductID(), newData.getProductSellerID(), newData.getProductName(), newData.getProductDescription(), newData.getProductPrice(), newData.getProductStock(), newData.getProductSold());
+                        } else if (type.equals("transactions")) {
+                            Transaction newData = (Transaction) data;
+                            printWriter.printf("%s,%s,%s,%s,%s,%d,%f,%s,%s\n", newData.getTransactionID(), newData.getCustomerID(), newData.getSellerID(), newData.getProductID(), newData.getAddressID(), newData.getQuantity(), newData.getTotalPrice(), newData.getTransactionDate(), newData.getTransactionStatus());
                         }
                         printWriter.close();
                     } catch (IOException e) {
@@ -125,7 +187,7 @@ public class FileManagement {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("File not found!");
+            System.out.printf("File %s not found!\n", filePath);
         }
     }
 }

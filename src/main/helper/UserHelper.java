@@ -95,4 +95,13 @@ public class UserHelper {
             }
         }
     }
+
+    public static User getUserDetail(UUID userID) {
+        for (User user : Database.users) {
+            if (user.getUserID().equals(userID)) {
+                return user;
+            }
+        }
+        return null;
+    }
 }

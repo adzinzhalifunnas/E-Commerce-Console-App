@@ -26,6 +26,17 @@ public class Util {
         return Integer.parseInt(input);
     }
 
+    public static Double scanDouble() {
+        String input = scanner.nextLine();
+        try {
+            Double.parseDouble(input);
+        } catch (NumberFormatException e) {
+            System.out.println("[Error] Please enter a valid double.");
+            return scanDouble();
+        }
+        return Double.parseDouble(input);
+    }
+
     public static String scanString() {
         String input = scanner.nextLine();
         if (input.equals("")) {
@@ -73,5 +84,63 @@ public class Util {
 
     public static String capitalize(String str) {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    public static String formatIDR(Double amount) {
+        return String.format("IDR %,.2f", amount);
+    }
+
+    public static String getCurrentDateTime() {
+        return java.time.LocalDateTime.now().toString();
+    }
+
+    public static String convertDateTime(String dateTime) {
+        String[] dateTimeArr = dateTime.split("T");
+        String[] dateArr = dateTimeArr[0].split("-");
+        String[] timeArr = dateTimeArr[1].split(":");
+        String month = "";
+        switch (dateArr[1]) {
+            case "01":
+                month = "January";
+                break;
+            case "02":
+                month = "February";
+                break;
+            case "03":
+                month = "March";
+                break;
+            case "04":
+                month = "April";
+                break;
+            case "05":
+                month = "May";
+                break;
+            case "06":
+                month = "June";
+                break;
+            case "07":
+                month = "July";
+                break;
+            case "08":
+                month = "August";
+                break;
+            case "09":
+                month = "September";
+                break;
+            case "10":
+                month = "October";
+                break;
+            case "11":
+                month = "November";
+                break;
+            case "12":
+                month = "December";
+                break;
+        }
+        String year = dateArr[0];
+        String hour = timeArr[0];
+        String minute = timeArr[1];
+        String second = timeArr[2].substring(0, 2);
+        return String.format("%s %s %s, %s:%s:%s", dateArr[2], month, year, hour, minute, second);
     }
 }

@@ -3,6 +3,7 @@ package main.services;
 import java.util.UUID;
 
 import main.helper.AddressHelper;
+import main.model.Address;
 import main.model.request.AddressRequestDTO;
 import main.util.Util;
 
@@ -35,5 +36,13 @@ public class AddressService {
         } while (country.length() < 3 || country.length() > 20);
         AddressRequestDTO addressRequestDTO = new AddressRequestDTO(null, userID, addressName, street, city, state, zipCode, country);
         AddressHelper.addAddress(addressRequestDTO);
+    }
+
+    public static void viewAddress(UUID userID) {
+        AddressHelper.viewUserAddresses(userID);
+    }
+
+    public static Address getAddressDetail(UUID userID, String addressName) {
+        return AddressHelper.getAddressDetail(userID, addressName);
     }
 }

@@ -54,4 +54,13 @@ public class AddressHelper {
             System.out.println("[Info] You have no address yet.");
         }
     }
+
+    public static Address getAddressDetail(UUID userID, String addressName) {
+        for (Address address : Database.addresses) {
+            if (address.getUserID().equals(userID) && address.getAddressName().equals(addressName)) {
+                return address;
+            }
+        }
+        return null;
+    }
 }
