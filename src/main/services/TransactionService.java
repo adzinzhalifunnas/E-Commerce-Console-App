@@ -10,6 +10,7 @@ import main.model.Address;
 import main.model.Product;
 import main.model.User;
 import main.model.request.TransactionRequestDTO;
+import main.services.thread.ProcessTransactionThread;
 import main.util.Util;
 
 public class TransactionService {
@@ -33,20 +34,10 @@ public class TransactionService {
                         String addressName = Util.scanString();
                         Address chosenAddress = AddressService.getAddressDetail(buyerID, addressName);
                         if (chosenAddress != null) {
-                            UUID sellerID = product.getProductSellerID();
-                            User seller = UserHelper.getUserDetail(sellerID);
-                            double sellerBalance = seller.getBalance();
-                            double newSellerBalance = sellerBalance + totalPrice;
-                            double newBuyerBalance = userBalance - totalPrice;
-                            int newProductStock = product.getProductStock() - quantity;
-                            int newProductSold = product.getProductSold() + quantity;
-                            seller.setBalance(newSellerBalance);
-                            buyer.setBalance(newBuyerBalance);
-                            product.setProductStock(newProductStock);
-                            product.setProductSold(newProductSold);
-                            String transactionDate = Util.getCurrentDateTime();
-                            TransactionRequestDTO transactionRequestDTO = new TransactionRequestDTO(null, buyerID, sellerID, productID, chosenAddress.getAddressID(), quantity, totalPrice, transactionDate, "PAID");
-                            TransactionHelper.addTransaction(transactionRequestDTO);
+                            ProcessTransactionThread processTransactionThread = new ProcessTransactionThread(productID, chosenAddress.getAddressID(), quantity, totalPrice);
+                            Thread thread = new Thread(processTransactionThread);
+                            thread.start();
+                            System.out.println("[Info] Transaction has been processed.");
                         } else {
                             System.out.println("[Error] Address not found.");
                             Util.pressEnterToContinue();
