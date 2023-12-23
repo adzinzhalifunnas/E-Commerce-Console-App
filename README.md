@@ -26,9 +26,7 @@ git clone https://github.com/adzinzhalifunnas/E-Commerce-Console-App.git
 1. Customer = 1
 2. Seller (Store) = 2
 
-
-
-(Coming Soon)
+https://docs.google.com/document/d/1TQccLKv0aVcCWvWzii7g1T73azSfc6dXHHz4-51a5hY/edit?usp=sharing
 
 ## Contributors
 
